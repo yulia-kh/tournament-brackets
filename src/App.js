@@ -1,8 +1,10 @@
 import React from 'react';
 import './App.css';
-import config from './config'
+import config from './config';
+import Matchup from './Matchup';
 
 class App extends React.Component {
+  
   state = {
     firstRound: [],
     secondRound: [],
@@ -11,8 +13,9 @@ class App extends React.Component {
     teamInfo: [],
     hover: false
   }
+
   componentDidMount() {
-  fetch(`${config.API_ENDPOINT}/teams`) 
+    fetch(`${config.API_ENDPOINT}/teams`) 
       .then(res => 
         (!res.ok)
         ? res.json().then(e => Promise.reject(e))
@@ -72,7 +75,7 @@ class App extends React.Component {
         })
     }
 
-    handleMouseLeave = (teamId) => {
+    handleMouseLeave = () => {
       this.setState({
         teamInfo: [],
         hover: false
@@ -80,26 +83,6 @@ class App extends React.Component {
     }
 
   render() {
-    const displayMatchup = (team) => {
-      return (
-        <ul key={team[0].team_id + team[1].team_id} className="matchup">
-          <li key={team[0].team_id} className="team" 
-            onMouseEnter={() => this.handleMouseEnter(team[0].team_id, team[0].name)}
-            onMouseLeave={this.handleMouseLeave}>
-            <img src={team[0].logo_url} alt={team[0].name + ' logo'}></img>
-            {team[0].name || 'N/A'}
-            <span className="score">{team[0].rating}</span>
-          </li>
-          <li key={team[1].team_id} className="team" 
-          onMouseEnter={() => this.handleMouseEnter(team[1].team_id, team[1].name)}
-          onMouseLeave={this.handleMouseLeave}>
-            <img src={team[1].logo_url} alt={team[1].name + ' logo'}></img>
-            {team[1].name || 'N/A'}
-            <span className="score">{team[1].rating}</span>
-          </li>
-        </ul>
-      )
-    }
     return (
     <div className="App">
       <header className="hero">
@@ -112,21 +95,21 @@ class App extends React.Component {
           <div className="round current roune-one">
             <div className="round-details">Round 1<br/><span className="date">March 16</span></div>
             {this.state.firstRound.map(team => {
-              return displayMatchup(team);
+              return <Matchup team={team} onHover={this.handleMouseEnter} onLeave={this.handleMouseLeave}/>;
             })}
           </div>
 
           <div className="round current round-two">
             <div className="round-details">Round 2<br/><span className="date">March 18</span></div> 
             {this.state.secondRound.map(team => {
-              return displayMatchup(team);
+              return <Matchup team={team} onHover={this.handleMouseEnter} onLeave={this.handleMouseLeave}/>;
             })}
           </div>
 
           <div className="round current round-three">
             <div className="round-details">Round 3<br/><span className="date">March 22</span></div>			
             {this.state.thirdRound.map(team => {
-              return displayMatchup(team);
+              return <Matchup team={team} onHover={this.handleMouseEnter} onLeave={this.handleMouseLeave}/>;
             })}
           </div>
 
@@ -134,7 +117,7 @@ class App extends React.Component {
             <div className="final">
               <div className="round-details">championship <br/><span className="date">March 30</span></div>		
               {this.state.championship.map(team => {
-            return displayMatchup(team);
+            return <Matchup team={team} onHover={this.handleMouseEnter} onLeave={this.handleMouseLeave}/>;
           })}
             </div>
           </div>
